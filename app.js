@@ -1,5 +1,5 @@
-angular.module('flapperNews', ['ui-router'])
-.config({
+angular.module('flapperNews', ['ui.router'])
+.config([
   '$stateProvider',
   '$urlRouterProvider',
   function($stateProvider, $urlRouterProvider){
@@ -8,10 +8,15 @@ angular.module('flapperNews', ['ui-router'])
         url: "/home",
         templateUrl: "/home.html",
         controller: 'MainCtrl'
+      })
+      .state('posts', {
+        url: '/posts/{id}', // Single bracket means the id is a param
+        templateUrl: '/posts.html',
+        controller: 'PostsCtrl'
       });
       $urlRouterProvider.otherwise('home'); // Routes all bad paths to home
   }
-})
+])
 .factory('posts', [function(){
   var o = {
     posts: []
@@ -29,7 +34,11 @@ angular.module('flapperNews', ['ui-router'])
       $scope.posts.push({
         title: $scope.title,
         link: $scope.link,
-        upvotes: 0
+        upvotes: 0,
+        comments: [
+          {author: 'Cat', body: 'Purrrrific!', upvotes: 0},
+          {author: 'Kitten', body: 'Meowzors!', upvotes: 0}
+        ]
       });
       $scope.title = '';
       $scope.link = '';
@@ -37,5 +46,13 @@ angular.module('flapperNews', ['ui-router'])
     $scope.incrementUpvotes = function(post){
       post.upvotes += 1;
     }
+  }
+])
+.controller('PostsCtrl', [
+  '$scope',
+  '$scopeParams',
+  'posts',
+  function($scope, $scopeParams, posts){
+    $scope.post = posts.posts[$stateParams.id];
   }
 ]);
