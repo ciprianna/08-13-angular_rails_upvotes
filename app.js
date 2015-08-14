@@ -1,4 +1,17 @@
 angular.module('flapperNews', ['ui-router'])
+.config({
+  '$stateProvider',
+  '$urlRouterProvider',
+  function($stateProvider, $urlRouterProvider){
+    $stateProvider // Sets up a home state
+      .state('home', {
+        url: "/home",
+        templateUrl: "/home.html",
+        controller: 'MainCtrl'
+      });
+      $urlRouterProvider.otherwise('home'); // Routes all bad paths to home
+  }
+})
 .factory('posts', [function(){
   var o = {
     posts: []
